@@ -178,10 +178,10 @@
 			}
 		</style>
 
-		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new Event('closeSophus'));"></div>
+		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));"></div>
 
 		<div class="bac_sophus_content">
-			<div class="bac_sophus_close" onclick="document.dispatchEvent(new Event('closeSophus'));">&times;</div>
+			<div class="bac_sophus_close" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));">&times;</div>
 			<div class="bac_sophus_image">
 				<img src="bac.svg"  onload="this.style.opacity = 1;" />
 				<img src="ford.png" onload="this.style.opacity = 1;" />
@@ -220,6 +220,22 @@
 		</div>
 	</div>
 
+	<script>
+		(function () {
+		  if ( typeof window.CustomEvent === "function" ) return false; //If not IE
+
+		  function CustomEvent ( event, params ) {
+		    params = params || { bubbles: false, cancelable: false, detail: undefined };
+		    var evt = document.createEvent( 'CustomEvent' );
+		    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+		    return evt;
+		   }
+
+		  CustomEvent.prototype = window.Event.prototype;
+
+		  window.CustomEvent = CustomEvent;
+		})();
+	</script>
 	<script>
 		(function() {
 
