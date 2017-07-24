@@ -178,10 +178,10 @@
 			}
 		</style>
 
-		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new Event('closeSophus'));"></div>
+		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));"></div>
 
 		<div class="bac_sophus_content">
-			<div class="bac_sophus_close" onclick="document.dispatchEvent(new Event('closeSophus'));">&times;</div>
+			<div class="bac_sophus_close" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));">&times;</div>
 			<div class="bac_sophus_image">
 				<img src="bac.svg"  onload="this.style.opacity = 1;" />
 				<img src="ford.png" onload="this.style.opacity = 1;" />
@@ -206,7 +206,8 @@
 
 					<label data-error="Please enter a valid email">
 						Email
-						<input required type="email" name="email" autocomplete="email" placeholder="Email">
+						<input required type="email" name="email" autocomplete="email" placeholder="Email" list="emails">
+						<datalist id="emails"></datalist>
 					</label>
 
 					<label data-error="Please enter a valid telephone number">
@@ -221,9 +222,59 @@
 	</div>
 
 	<script>
-		(function() {
+		(function () {
+		  if ( typeof window.CustomEvent === "function" ) return false; //If not IE
 
-			var $container = document.getElementById('bac_sophus_container');
+		  function CustomEvent ( event, params ) {
+		    params = params || { bubbles: false, cancelable: false, detail: undefined };
+		    var evt = document.createEvent( 'CustomEvent' );
+		    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+		    return evt;
+		   }
+
+		  CustomEvent.prototype = window.Event.prototype;
+
+		  window.CustomEvent = CustomEvent;
+		})();
+	</script>
+
+	<script>
+		(function() {
+			var emails = [   
+			    "gmail.com",
+			    "hotmail.co.uk",
+			    "hotmail.com",
+			    "outlook.com",
+			    "yahoo.co.uk",
+			    "yahoo.com",
+			    "live.com",
+			    "aol.com",
+			    "btinternet.com",
+			    "mail.com",
+			    "comcast.net",
+			    "me.com",
+			    "msn.com",
+			    "ymail.com",
+			    "mac.com",
+			    "verizon.net",
+			    "aim.com",
+			    "googlemail.com",
+			    "qq.com",
+			    "live.co.uk",
+			    "sky.com",
+			    "netscape.net",
+			    "icloud.com",
+			    "windowslive.com",
+			    "proxymail.facebook.com",
+			    "google.com",
+			    "talktalk.net",
+			    "blueyonder.co.uk",
+			    "eircom.net",
+			    "dennis.co.uk"
+			];
+
+			var $datalist	= document.getElementById('emails');
+			var $container 	= document.getElementById('bac_sophus_container');
 
 			var successTemplate = `
 				<div class="bac_sophus_success">
@@ -273,11 +324,35 @@
 
 
 		    var closeModal = function() {
-		    	$container.outerHTML = '';
+		    	document.getElementById('bac_sophus_container').outerHTML = '';
 		    }
 
 		    document.addEventListener('closeSophus', function() {
 		    	closeModal();
+		    }, {
+		    	passive: true,
+		    	once: true
+		    });
+
+		    document.querySelector('input[name="email"]').addEventListener('keyup', function(e) {
+		    	var mail = e.currentTarget.value.split('@');
+
+		    	if (e.currentTarget.value.split('@').length > 1 && mail[1].length > 0) {
+		    		if (datalistPopulated === true) { return; }
+
+		    		datalistPopulated = true;
+		    		var list = '';
+
+		    		emails.forEach(function(provider) {
+		    			list += '<option value="' + mail[0] + '@' + provider + '">';
+		    		});
+
+		    		$datalist.innerHTML = list;
+		    	} else {
+		    		datalistPopulated = false;
+
+		    		$datalist.innerHTML = '';
+		    	}
 		    });
 	   })();
 	</script>
