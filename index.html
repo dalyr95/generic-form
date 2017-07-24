@@ -9,6 +9,39 @@
 <body>
 
 	<div id="bac_sophus_container" class="bac_sophus_container" tabIndex="1">
+		<script>
+			(function () {
+			  if ( typeof window.CustomEvent === "function" ) return false; //If not IE
+
+			  function CustomEvent ( event, params ) {
+			    params = params || { bubbles: false, cancelable: false, detail: undefined };
+			    var evt = document.createEvent( 'CustomEvent' );
+			    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+			    return evt;
+			   }
+
+			  CustomEvent.prototype = window.Event.prototype;
+
+			  window.CustomEvent = CustomEvent;
+			})();
+		</script>
+		<script>
+			(function() { 
+
+				document.getElementById('bac_sophus_container').classList.add('bac_sophus_' + window.location.hostname.split('.')[1]);
+
+			    var closeModal = function() {
+			    	document.getElementById('bac_sophus_container').outerHTML = '';
+			    }
+			    document.addEventListener('closeSophus', function() {
+			    	closeModal();
+			    }, {
+			    	passive: true,
+			    	once: true
+			    });
+			})();
+		</script>
+
 		<style scoped>
 			* {
 				box-sizing: border-box;
@@ -46,7 +79,7 @@
 				top:  50%;
 				left: 50%;
 				transform: translate(-50%, -50%);
-				padding: 20px;
+				padding: 20px 20px 0;
 				width: 80vw;
 				-webkit-overflow-scrolling: touch;
 			}
@@ -83,17 +116,30 @@
 			}
 
 			.bac_sophus_image img:first-child {
-				margin-bottom: 20px;
+				position: relative;
+				top: -120px;
 			}
 
 			.bac_sophus_form {
 				float: right;
 				min-height: 100px;
-				margin: 40px 0;
+				margin: 20px 0 0;
 				max-width: 800px;
 				padding: 0 10px;
 				position: relative;
 				width: 60%;
+			}
+
+			.bac_sophus_form h2 {
+				margin-bottom: 0;
+			}
+
+			.bac_sophus_buyacar .bac_sophus_form ul {
+				padding-left: 30px;
+			}
+
+			.bac_sophus_form ul {
+			    list-style-type: disc;
 			}
 
 			.bac_sophus_form label {
@@ -156,6 +202,12 @@
 				width: calc(100% - 20px);
 			}
 
+			.bac_sophus_container iframe {
+				border:  0;
+				width: 100%;
+				height: 460px;
+			}
+
 			@media (max-width: 800px) {
 				.bac_sophus_content {
 					display: block;
@@ -169,118 +221,51 @@
 					width: 100%;
 					max-width: 100%;
 				}
+
+				.bac_sophus_image img:first-child {
+					margin-bottom: 20px;
+					top: 0;
+				}
 			}
 
-			@media (min-width: 1400px) {
+			@media (max-width: 500px) {
+				.bac_sophus_container iframe {
+					height: 460px;
+				}
+			}
+
+			@media (min-width: 1200px) {
 				.bac_sophus_content {
 					max-width: 1000px;
 				}
 			}
 		</style>
 
-		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new Event('closeSophus'));"></div>
+		<div class="bac_sophus_overlay" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));"></div>
 
 		<div class="bac_sophus_content">
-			<div class="bac_sophus_close" onclick="document.dispatchEvent(new Event('closeSophus'));">&times;</div>
+			<div class="bac_sophus_close" onclick="document.dispatchEvent(new CustomEvent('closeSophus'));">&times;</div>
 			<div class="bac_sophus_image">
-				<img src="bac.svg"  onload="this.style.opacity = 1;" />
-				<img src="ford.png" onload="this.style.opacity = 1;" />
+				<img src="//ads.dennisnet.co.uk/buyacar/logos/bac-logo.svg"  onload="this.style.opacity = 1;" />
+				<img src="//cdn2.buyacar.co.uk/sites/buyacar/files/ford-focus-stock.png" onload="this.style.opacity = 1;" />
 			</div>
 			<div id="bac_sophus_form" class="bac_sophus_form">
-				<p>
-					Unbeatable New Ford deals, across the range with buyacar.co.uk<br/>
-					Save up to £5316<br/>
-					<br/>
-					Finance available from just 0% APR<br/>
-					<br/>
-					Brand new and unregistered<br/>
-					Delivery to your door<br/>
-					Choice of specifications from across the range<br/>
-				</p>
+				<h2>Save up to £5,316 on on a brand new Ford Focus.</h2>
+				<br/>
+				Unbeatable deals including finance from 0% APR<br/>
+				Buyacar.co.uk deliver brand new and unregistered cars<br/>
+				<ul>
+				<li>Full choice of colour and specification</li>
+				<li>Full range available</li>
+				<li>Full peace of mind</li>
+				</ul>
 
-				<form>
-					<label data-error="Please enter your name">
-						Name
-						<input required type="text" name="name" autocomplete="name" placeholder="Name">
-					</label>
+				Leave your details to receive a call back from one of our team:
 
-					<label data-error="Please enter a valid email">
-						Email
-						<input required type="email" name="email" autocomplete="email" placeholder="Email">
-					</label>
-
-					<label data-error="Please enter a valid telephone number">
-						Telephone Number
-						<input required type="tel" name="phone" autocomplete="tel" placeholder="Telephone Number" pattern="^\s*\(?(020[7,8]{1}\)?[ ]?[1-9]{1}[0-9{2}[ ]?[0-9]{4})|(0[1-8]{1}[0-9]{3}\)?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{3})\s*$">
-					</label>
-
-					<button type="submit">Submit</button>
-				</form>
+				<iframe src="//dennispublishing.emsecure.net/optiext/optiextension.dll?ID=B6iZeSz03X_npDiP16aPiUYwPuk%2B673O2lEx5sNja2vYEO5G2jw21YFgKbsEtz2aMrvdCr0ebdJNBH"></iframe>
 			</div>
 		</div>
 	</div>
-
-	<script>
-		(function() {
-
-			var $container = document.getElementById('bac_sophus_container');
-
-			var successTemplate = `
-				<div class="bac_sophus_success">
-					Thanks for submitting. Enjoy the spam!!
-					<button onclick="document.dispatchEvent(new Event('closeSophus'));">Close</button>
-				</div>
-			`;
-
-			if ('ontouchstart' in window) {
-	 			var mobileScrollClass = `
-					html,
-					body {
-						height: 100%;
-						width: 100%;
-						overflow: auto;
-						-webkit-overflow-scrolling: auto;
-					}
-				`;
-
-				var mobileScrollStyles			= document.createElement('STYLE');
-				mobileScrollStyles.id 			= 'mobileScrollStyles';
-				mobileScrollStyles.innerText 	= mobileScrollClass;
-				document.head.appendChild(mobileScrollStyles);
-			}
-
-
-			$container.querySelector('form').addEventListener('submit', function(e) {
-				e.preventDefault();
-
-				if (e.currentTarget.checkValidity() === true) {
-					document.getElementById('bac_sophus_form').innerHTML = successTemplate;
-				}
-			});
-
-
-		    $container.querySelector('form').addEventListener('invalid', function(e) {
-		        e.preventDefault();
-		        e.target.parentElement.classList.add('bac_sophus_invalid');
-		    }, true);
-
-
-		    [].slice.call($container.querySelectorAll('input')).forEach(function(e) {
-		    	e.addEventListener('keyup', function(e) {
-		    		e.currentTarget.parentElement.classList.remove('bac_sophus_invalid');
-		    	});
-		    });
-
-
-		    var closeModal = function() {
-		    	$container.outerHTML = '';
-		    }
-
-		    document.addEventListener('closeSophus', function() {
-		    	closeModal();
-		    });
-	   })();
-	</script>
 
 </body>
 </html>
